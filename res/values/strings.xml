@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyToDo</string>
+    <string name="header">Список дел</string>
+    <string name="button_add">Добавить запись</string>
+    <string name="date_choose">Выбрать дату</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="checked">Отметить как выполненное</string>
+</resources>
