@@ -18,5 +18,5 @@
             android:layout_height="wrap_content"
             android:text="@string/date_choose"
             android:id="@+id/btn_date_choose" android:layout_gravity="center_horizontal"
-            android:onClick="datePickerDialogFragment"/>
+            />
 </LinearLayout>

@@ -8,4 +8,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTaskDialog"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_choose"
+            android:id="@+id/btn_edit_date" android:layout_gravity="center_horizontal"
+            android:onClick="datePickerDialogFragment"/>
 </LinearLayout>

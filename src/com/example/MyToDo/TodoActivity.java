@@ -4,7 +4,6 @@ import android.app.*;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -16,6 +15,7 @@ public class TodoActivity extends Activity{
     private ToDoList toDoList;
     private ListView lvTodoList;
     private TodoAdapter adapter;
+    private Button btnChangeDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class TodoActivity extends Activity{
         Calendar c = Calendar.getInstance();
         c.roll(Calendar.YEAR, -2);
         long date = c.getTimeInMillis();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             Task task = new Task();
             task.setTitle("Купить хлеб");
             task.setDate(r.nextLong() % date);
@@ -60,7 +60,7 @@ public class TodoActivity extends Activity{
         menu.add(R.string.edit).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(TodoActivity.this);
                 builder.setTitle(R.string.edit)
                         .setView(view)
                         .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
@@ -75,6 +75,7 @@ public class TodoActivity extends Activity{
                                 EditText editTask = (EditText) view.findViewById(R.id.editTaskDialog);
                                 String chngTask = editTask.getText().toString();
                                 task.setTitle(chngTask);
+                                fillList();
                             }
                         })
                         .create()
@@ -82,5 +83,71 @@ public class TodoActivity extends Activity{
                 return true;
             }
         });
+        menu.add(R.string.delete).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                toDoList.deleteTask(position);
+                fillList();
+                return true;
+            }
+        });
+        if (!task.isAchieved()){
+            menu.add(R.string.checked).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    task.setAchieved(true);
+                    fillList();
+                    return true;
+                }
+            });
+        } else {
+            menu.add(R.string.nonChecked).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    task.setAchieved(false);
+                    fillList();
+                    return true;
+                }
+            });
+        }
+    }
+
+    public void addTaskDialog(View view){
+        final View customView = getLayoutInflater().inflate(R.layout.add_dialog, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        Task task = new Task();
+        builder.setTitle("Добавить")
+                .setView(customView)
+                .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText editTitle = (EditText) customView.findViewById(R.id.editTask);
+                        String title = editTitle.getText().toString();
+                        task.setTitle(title);
+                        btnChangeDate = (Button) customView.findViewById(R.id.btn_date_choose);
+                        btnChangeDate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                datePickerDialogFragment(v);
+
+                            }
+                        });
+                        toDoList.addTask(task);
+                        TodoActivity.this.fillList();
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    public void datePickerDialogFragment(View view) {
+        new DatePickerFragment()
+                .show(getFragmentManager(), "datePicker");
     }
 }

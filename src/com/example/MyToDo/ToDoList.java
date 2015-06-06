@@ -40,4 +40,8 @@ public class ToDoList {
     public void addTask(Task task){
         todoList.add(task);
     }
+
+    public void deleteTask(int position){
+        todoList.remove(position);
+    }
 }
